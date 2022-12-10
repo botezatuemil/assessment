@@ -13,6 +13,8 @@ const Home = () => {
   const [finised, setFinished] = useState<boolean>(false);
   const [per_page, setPerPage] = useState<number>(5);
 
+  const [valid, setValid] = useState<boolean>(true);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
@@ -29,7 +31,7 @@ const Home = () => {
 
       const slicedGists = allGists.slice(per_page, per_page + 5);
 
-      if (allGists.length < per_page) {
+      if (allGists.length <= per_page) {
         setFinished(true);
 
       } else {
@@ -37,6 +39,7 @@ const Home = () => {
         setPerPage((per_page) => per_page + 5);
        
       }
+      if (slicedGists.length !== 0)
       setGists(slicedGists);
       
     }
@@ -52,17 +55,12 @@ const Home = () => {
         setGists(slicedGists);
         setFinished(false);
       } 
-      //getPublicGists(page - 1);
+ 
     }
   };
 
   const getPublicGists = async () => {
-    const options = {
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.SECRET_KEY,
-    };
 
-    const queryString = qs.stringify(options);
     const url = `https://api.github.com/users/${username}/gists`;
 
     try {
@@ -70,8 +68,11 @@ const Home = () => {
        
       });
       createGists(data);
-    } catch (error) {
-      console.log(error);
+      setValid(true);
+    } catch (error : any) {
+      if (error.response.status === 404) {
+        setValid(false);
+      }
     }
   };
 
@@ -136,9 +137,14 @@ const Home = () => {
       </form>
 
       <div className="flex flex-col space-y-12  overflow-y-auto h-[70vh]">
-        {gists.map((gist) => (
-          <Gist files={gist.files} forks_url={gist.forks_url} url={gist.url} page={page} />
-        ))}
+        {valid ? gists.map((gist) => (
+          <Gist files={gist.files} forks_url={gist.forks_url} url={gist.url}  />
+        )) : (
+           <div className="flex w-[20vw] h-[50px] bg-red-400  border-2 border-red-500 justify-center items-center">
+             <p className="text-white">Username not found!</p>
+           </div>
+
+        )}
       </div>
 
       <div className="flex flex-row justify-between w-[40vw]">

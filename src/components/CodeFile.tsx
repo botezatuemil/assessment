@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import CodeModal from "./CodeModal";
-import axios from "axios";
+
 
 const CodeFile: React.FC<{
   filename: string;

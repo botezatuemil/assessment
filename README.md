@@ -1,10 +1,50 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# GitHub Gist api
 
-## Available Scripts
+### 1. Search gists:
+- uses Axios library to make a call to public gists by user
+- if the user is not found an error message is displayed
 
-In the project directory, you can run:
+### 2. Forks:
+- it fetches the list of forks with the fork_url call in ascending order by date
+- popped the last 3 recent users who forked the gist and push to the state array
+- if there are less the 3 users, all users are displayed with avatar image and username
+
+### 3. User file component:
+- an array with all files of the gist
+- it shows the name of the file and the programming language in a badge
+
+### 4. Gist content:
+- when the name of the file is pressed, a modal opens that shows the code content with the possiblity of copying the entire content
+- uses the **react-code-block** library to highlight the code and format it 
+- when pressing the outside of the modal, it closes
+
+
+
+## Optimizations
+
+- because of the large size of the public gists, and for every gist there were at least 3 forks, the app makes a lot of requests and the list of gists can make the app laggy.
+- instead I fetched the entire public gists in an array, and I made pagination that expects 5 results for per_page
+- when the next button is clicked, the array is sliced with the next 5 results, making a performance improvement without the need for more requests
+- when the previous button is clicked, the arrat is sliced with the previous 5 results
+
+## Further improvements
+
+- making an authentification protocol that uses OAuth2 to let the user to make CRUD operations on gists, and to see his private gists
+- this app can be used as a guest user that needed no authentification
+
+
+
+## Tech Stack
+
+React, TailwindCSS
+
+
+
+
+## Installation
+
+Install my-project with npm
 
 ### `npm start`
 
@@ -44,3 +84,5 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+    

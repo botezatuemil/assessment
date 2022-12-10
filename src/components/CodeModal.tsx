@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { CopyBlock, dracula } from "react-code-blocks";
 import axios from "axios";
-import qs from "qs"
+
 const CodeModal: React.FC<{
   raw_url: string;
   showModal: boolean;
