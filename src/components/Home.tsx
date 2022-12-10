@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import qs from "qs";
+import { UserGist, GistFile } from "../interfaces";
+import Gist from "./Gist";
 
 const Home = () => {
 
   const [page, setPage] = useState<number>(1);
   const [username, setUsername] = useState<string>("");
+  const [gists, setGists] = useState<UserGist[]>([]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     getPublicGists();
   };
 
@@ -17,7 +19,7 @@ const Home = () => {
     const url = `https://api.github.com/users/${username}/gists`;
 
     const options = {
-      per_page: "2",
+      per_page: "5",
       page: page,
     };
 
@@ -25,7 +27,8 @@ const Home = () => {
 
     try {
       const { data } = await axios.get(`${url}?${queryString}`);
-      console.log(data);
+      createGists(data);
+      //console.log(data);
 
     } catch (error) {
       console.log(error);
@@ -36,8 +39,40 @@ const Home = () => {
     setUsername(event.currentTarget.value);
   }
 
+  const createGists = (data : any) => {
+    // adrianhajdin
+
+    const gistsArr : UserGist[] = [];
+    const filesArr : GistFile[] = [];
+
+    data.map((value: any) => {
+        for (const key in value.files) {
+            const newFile : GistFile = {
+                filename: value.files[key].filename,
+                language: value.files[key].language,
+                raw_url: value.files[key].raw_url
+            }
+            filesArr.push(newFile);
+        }
+
+
+        const gist : UserGist = {
+            url: value.url,
+            files: filesArr,
+            forks_url: value.forks_url
+        }
+
+        gistsArr.push(gist);
+    })
+    console.log('====================================');
+    console.log(gistsArr);
+    console.log('====================================');
+
+    setGists(gistsArr);
+  }
+
   return (
-    <div className="flex w-full h-full justify-center">
+    <div className="flex w-full h-full  flex-col items-center space-y-10">
       <form
         className="flex flex-row space-x-4 h-[70px]"
         onSubmit={handleSubmit}
@@ -48,6 +83,7 @@ const Home = () => {
             className="w-[30vw] rounded bg-[#343941] text-white h-[30px] px-2"
             placeholder="Enter Github username"
             onChange={onChangeHandler}
+            value={username}
           />
         </div>
         <button
@@ -57,6 +93,10 @@ const Home = () => {
           Search
         </button>
       </form>
+
+      <div className="flex flex-col space-y-4  overflow-y-auto">
+        {gists.map((gist) => <Gist files={gist.files} forks_url={gist.forks_url} url={gist.url} />)}
+      </div>
     </div>
   );
 };
