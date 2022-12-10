@@ -5,17 +5,19 @@ import axios from "axios";
 import UserFork from "./UserFork";
 import qs from "qs";
 
-const Gist: React.FC<{ files: GistFile[]; forks_url: string; url: string }> = (
+const Gist: React.FC<{ files: GistFile[]; forks_url: string; url: string, page: number}> = (
   props
 ) => {
   // adrianhajdin
   const [forks, setForks] = useState<Fork[]>([]);
 
   const getForks = async () => {
-
-
+    console.log(props.forks_url);
+    
     try {
-      const { data } = await axios.get(`${props.forks_url}`);
+      const { data } = await axios.get(`${props.forks_url}`, {
+      
+      });
       createForks(data);
     } catch (error) {
       console.log(error);
@@ -51,7 +53,7 @@ const Gist: React.FC<{ files: GistFile[]; forks_url: string; url: string }> = (
 
   useEffect(() => {
     getForks();
-  }, []);
+  }, [props.page]);
 
   return (
     <div className="flex bg-[#343941] w-[40vw]  rounded-md flex-col ">

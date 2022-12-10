@@ -8,46 +8,67 @@ const Home = () => {
   const [page, setPage] = useState<number>(1);
   const [username, setUsername] = useState<string>("");
   const [gists, setGists] = useState<UserGist[]>([]);
+  const [allGists, setAllGists] = useState<UserGist[]>([]);
+
   const [finised, setFinished] = useState<boolean>(false);
+  const [per_page, setPerPage] = useState<number>(5);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    getPublicGists(page);
+    
+    setFinished(false);
+    setPerPage(5);
+    setPage(1);
+
+    getPublicGists();
+    
   };
 
   const handleNextPage = () => {
     if (!finised) {
-        getPublicGists(page + 1);
-        setPage(page => page + 1);
+
+      const slicedGists = allGists.slice(per_page, per_page + 5);
+
+      if (allGists.length < per_page) {
+        setFinished(true);
+
+      } else {
+        setPage((page) => page + 1);
+        setPerPage((per_page) => per_page + 5);
+       
+      }
+      setGists(slicedGists);
+      
     }
-  }
+  };
 
   const handlePreviousPage = () => {
     if (page > 1) {
-        setPage((page) => page - 1);
-        getPublicGists(page - 1);
+      setPage((page) => page - 1);
+
+      if (per_page > 5) {
+        setPerPage((per_page) => per_page - 5);
+        const slicedGists = allGists.slice(per_page - 10, per_page -5);
+        setGists(slicedGists);
+        setFinished(false);
+      } 
+      //getPublicGists(page - 1);
     }
-  }
+  };
 
-  const getPublicGists = async (page : number) => {
-    const url = `https://api.github.com/users/${username}/gists`;
-
+  const getPublicGists = async () => {
     const options = {
-      per_page: "5",
-      page: page,
-     
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.SECRET_KEY,
     };
-    console.log(page)
 
     const queryString = qs.stringify(options);
+    const url = `https://api.github.com/users/${username}/gists`;
 
     try {
-      const { data } = await axios.get(`${url}?${queryString}`);
-      if (data.length === 0) {
-        setFinished(true);
-      } else {
-        setFinished(false);
-      }
+      const { data } = await axios.get(`${url}`, {
+       
+      });
       createGists(data);
     } catch (error) {
       console.log(error);
@@ -80,7 +101,15 @@ const Home = () => {
       gistsArr.push(gist);
     });
 
-    setGists(gistsArr);
+    setAllGists(gistsArr);
+
+    const slicedGists = gistsArr.slice(0, per_page);
+
+    if (slicedGists.length < per_page) {
+      setFinished(true);
+    }
+    setGists(slicedGists);
+    
   };
 
   return (
@@ -108,7 +137,7 @@ const Home = () => {
 
       <div className="flex flex-col space-y-12  overflow-y-auto h-[70vh]">
         {gists.map((gist) => (
-          <Gist files={gist.files} forks_url={gist.forks_url} url={gist.url} />
+          <Gist files={gist.files} forks_url={gist.forks_url} url={gist.url} page={page} />
         ))}
       </div>
 
