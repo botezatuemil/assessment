@@ -43,9 +43,10 @@ const Home = () => {
     // adrianhajdin
 
     const gistsArr : UserGist[] = [];
-    const filesArr : GistFile[] = [];
+    
 
     data.map((value: any) => {
+        const filesArr : GistFile[] = [];
         for (const key in value.files) {
             const newFile : GistFile = {
                 filename: value.files[key].filename,
