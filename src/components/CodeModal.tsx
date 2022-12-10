@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { CopyBlock, dracula } from "react-code-blocks";
 import axios from "axios";
-
+import qs from "qs"
 const CodeModal: React.FC<{
   raw_url: string;
   showModal: boolean;
@@ -11,9 +11,16 @@ const CodeModal: React.FC<{
   const [code, setCode] = useState<string>();
 
   const fetchCode = async () => {
+
     try {
       const { data } = await axios.get(`${props.raw_url}`);
-      setCode(data);
+
+      if (props.language === "JSON") {
+        setCode(JSON.stringify(data));
+      } else {
+        setCode(data);
+      }
+     
     } catch (error) {
       console.log(error);
     }

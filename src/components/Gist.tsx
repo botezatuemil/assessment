@@ -3,6 +3,7 @@ import { GistFile, Fork } from "../interfaces";
 import CodeFile from "./CodeFile";
 import axios from "axios";
 import UserFork from "./UserFork";
+import qs from "qs";
 
 const Gist: React.FC<{ files: GistFile[]; forks_url: string; url: string }> = (
   props
@@ -11,6 +12,7 @@ const Gist: React.FC<{ files: GistFile[]; forks_url: string; url: string }> = (
   const [forks, setForks] = useState<Fork[]>([]);
 
   const getForks = async () => {
+
     try {
       const { data } = await axios.get(`${props.forks_url}`);
       createForks(data);
@@ -32,10 +34,6 @@ const Gist: React.FC<{ files: GistFile[]; forks_url: string; url: string }> = (
       forksArr.push(fork);
     });
 
-    // console.log('====================================');
-    // console.log(forksArr);
-    // console.log('====================================');
-
     let counter : number = 0;
     const lastCreatedForks : Fork[] = [];
 
@@ -46,8 +44,6 @@ const Gist: React.FC<{ files: GistFile[]; forks_url: string; url: string }> = (
             lastCreatedForks.push(fork);
         }
     }
-
-    //console.log(lastCreatedForks);
 
     setForks(lastCreatedForks);
   };
