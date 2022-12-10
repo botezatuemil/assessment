@@ -28,7 +28,6 @@ const Home = () => {
     try {
       const { data } = await axios.get(`${url}?${queryString}`);
       createGists(data);
-      //console.log(data);
 
     } catch (error) {
       console.log(error);
@@ -40,11 +39,7 @@ const Home = () => {
   }
 
   const createGists = (data : any) => {
-    // adrianhajdin
-
     const gistsArr : UserGist[] = [];
-    
-
     data.map((value: any) => {
         const filesArr : GistFile[] = [];
         for (const key in value.files) {
@@ -65,9 +60,6 @@ const Home = () => {
 
         gistsArr.push(gist);
     })
-    console.log('====================================');
-    console.log(gistsArr);
-    console.log('====================================');
 
     setGists(gistsArr);
   }
@@ -95,7 +87,7 @@ const Home = () => {
         </button>
       </form>
 
-      <div className="flex flex-col space-y-4  overflow-y-auto">
+      <div className="flex flex-col space-y-12  overflow-y-auto">
         {gists.map((gist) => <Gist files={gist.files} forks_url={gist.forks_url} url={gist.url} />)}
       </div>
     </div>

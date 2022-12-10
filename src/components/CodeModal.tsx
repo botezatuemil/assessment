@@ -11,9 +11,12 @@ const CodeModal: React.FC<{
   const [code, setCode] = useState<string>();
 
   const fetchCode = async () => {
-    const { data } = await axios.get(`${props.raw_url}`);
-    setCode(data);
-    console.log(data);
+    try {
+      const { data } = await axios.get(`${props.raw_url}`);
+      setCode(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const closeModal = () => {
@@ -26,10 +29,10 @@ const CodeModal: React.FC<{
 
   return (
     <div
-      className="flex fixed inset-0 0  bg-opacity-10 backdrop-blur-[2px] justify-center items-center "
+      className="flex fixed inset-0 0  bg-opacity-10 backdrop-blur-[2px] justify-center items-center z-50 "
       onClick={closeModal}
     >
-      <div className="w-[50vw] h-[50vh] bg-[#161B22] z-20 rounded overflow-y-auto z-100  ">
+      <div className="w-[50vw] h-[50vh] bg-[#161B22] z-20 rounded overflow-y-auto   ">
         <CopyBlock
           text={code}
           language={props.language}

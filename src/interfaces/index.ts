@@ -9,3 +9,9 @@ export interface GistFile {
   language: string;
   raw_url: string;
 }
+
+export interface Fork {
+  username: string;
+  avatar_url: string;
+  date : string;
+}

@@ -15,7 +15,7 @@ const CodeFile: React.FC<{
   }
 
   return (
-    <div className="flex w-full bg-[#0F172A] flex-row border-[1px] border-[#2c2e33]  ">
+    <div className="flex w-full bg-[#292c30] flex-row border-[1px] border-[#111113]  ">
       <div className="flex h-[50px] items-center px-4 w-full  ">
         {props.language !== null && (
           <div className="flex w-[100px] border-[1px] border-[#64FFDA] rounded-3xl justify-center">
@@ -24,7 +24,7 @@ const CodeFile: React.FC<{
         )}
 
         <div className="flex justify-end w-full">
-          <p onClick={openCode} className="text-[#CCD6F6] justify-self-end cursor-pointer ">{props.filename}</p>
+          <p onClick={openCode} className="text-white justify-self-end cursor-pointer ">{props.filename}</p>
         </div>
       </div>
      
