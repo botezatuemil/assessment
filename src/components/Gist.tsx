@@ -13,6 +13,7 @@ const Gist: React.FC<{ files: GistFile[]; forks_url: string; url: string }> = (
 
   const getForks = async () => {
 
+
     try {
       const { data } = await axios.get(`${props.forks_url}`);
       createForks(data);

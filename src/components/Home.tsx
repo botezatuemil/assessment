@@ -12,13 +12,12 @@ const Home = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    getPublicGists();
+    getPublicGists(page);
   };
 
   const handleNextPage = () => {
-    
-    getPublicGists();
     if (!finised) {
+        getPublicGists(page + 1);
         setPage(page => page + 1);
     }
   }
@@ -26,11 +25,11 @@ const Home = () => {
   const handlePreviousPage = () => {
     if (page > 1) {
         setPage((page) => page - 1);
-        getPublicGists();
+        getPublicGists(page - 1);
     }
   }
 
-  const getPublicGists = async () => {
+  const getPublicGists = async (page : number) => {
     const url = `https://api.github.com/users/${username}/gists`;
 
     const options = {
@@ -38,7 +37,7 @@ const Home = () => {
       page: page,
      
     };
-
+    console.log(page)
 
     const queryString = qs.stringify(options);
 
@@ -46,6 +45,8 @@ const Home = () => {
       const { data } = await axios.get(`${url}?${queryString}`);
       if (data.length === 0) {
         setFinished(true);
+      } else {
+        setFinished(false);
       }
       createGists(data);
     } catch (error) {
